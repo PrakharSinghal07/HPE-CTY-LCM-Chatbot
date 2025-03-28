@@ -24,10 +24,9 @@ const Main = () => {
     setInput,
     input,
     messages,
-    isFirstChat,
   } = useContext(Context);
 
-  const chatEndRef = useRef(null); // Ref to track the bottom of the chat container
+  const chatEndRef = useRef(null);
 
   // Function to scroll to the bottom
   const scrollToBottom = () => {
@@ -65,7 +64,6 @@ const Main = () => {
                       <img src={assets.chatbot_icon} alt="" />
                       {index === messages.length - 1 && loading ? (
                         <div className="loader">
-                          {console.log("loader")}
                           <span></span>
                           <span></span>
                           <span></span>
@@ -97,7 +95,7 @@ const Main = () => {
             onKeyDown={(e) => {
               if (e.key === "Enter" && input.trim()) {
                 onSent(input);
-                scrollToBottom(); // Scroll to the bottom
+                scrollToBottom(); 
 
               }
             }}
@@ -111,8 +109,8 @@ const Main = () => {
             <img
                onClick={() => {
                 if (input) {
-                  onSent(input); // Send the prompt
-                  scrollToBottom(); // Scroll to the bottom
+                  onSent(input); 
+                  scrollToBottom(); 
                 }
               }}
               src={assets.send_icon}

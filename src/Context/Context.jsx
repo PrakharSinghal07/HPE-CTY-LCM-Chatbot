@@ -8,11 +8,8 @@ const ContextProvider = (props) => {
   const [messages, setMessages] = useState([]); // Conversation history
   const [loading, setLoading] = useState(false); // Loading indicator
   const [showResult, setShowResult] = useState(false); // Toggle between greeting and conversation
-  const isFirstChat = useRef(true);
   const onSent = async (prompt) => {
-    console.log("Sending message...");
   setLoading(true);
-  console.log("Loading set to true");
 
   setShowResult(true);
 
@@ -23,13 +20,12 @@ const ContextProvider = (props) => {
 
   setInput("");
 
-  // Short delay to ensure React renders loader
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  console.log("Fetching response...");
+
   const response = await run(prompt || input);
 
-  console.log("Response received, formatting...");
+
   let formattedResponse = response
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -51,15 +47,14 @@ const ContextProvider = (props) => {
   });
 
   setLoading(false);
-  console.log("Loading set to false");
-    const words = formattedResponse.split(" "); // Split response into words
+    const words = formattedResponse.split(" "); 
   let currentText = "";
   words.forEach((word, index) => {
     setTimeout(() => {
-      currentText += word + " "; // Add the next word
+      currentText += word + " "; 
       setMessages((prevMessages) => {
         const updatedMessages = [...prevMessages];
-        updatedMessages[updatedMessages.length - 1].text = currentText; // Update the last bot message
+        updatedMessages[updatedMessages.length - 1].text = currentText; 
         return updatedMessages;
       });
       if (index === words.length - 1) {

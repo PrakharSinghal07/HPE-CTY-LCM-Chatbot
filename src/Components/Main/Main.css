@@ -177,7 +177,6 @@
 .result_title{
   margin: 10px 0px;
   display: flex;
-  /* align-items: center; */
   gap: 20px;
   transform: translateX(-2%);
 }
@@ -198,7 +197,7 @@
   display: flex;
   align-items: start;
   gap: 20px;
-  max-height: calc(100vh - 200px); /* Adjust height dynamically */
+  max-height: calc(100vh - 200px); 
   padding: 0px 20px;
   background-color: #ffffff;
   border-radius: 10px;
@@ -217,10 +216,10 @@
 .loader span {
   width: 10px;
   height: 10px;
-  background: linear-gradient(45deg, #3b82f6, #2563eb); /* Neon Blue Gradient */
+  background: linear-gradient(45deg, #3b82f6, #2563eb); 
   border-radius: 50%;
   animation: bounce 1.5s infinite ease-in-out;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.8); /* Neon Glow */
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.8); 
 }
 
 .loader span:nth-child(2) {
@@ -338,6 +337,5 @@ code {
   .card{
     display: none;
   }
-
 
 }
