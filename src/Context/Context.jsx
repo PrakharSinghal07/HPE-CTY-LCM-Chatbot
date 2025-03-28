@@ -8,7 +8,9 @@ const ContextProvider = (props) => {
   const [messages, setMessages] = useState([]); // Conversation history
   const [loading, setLoading] = useState(false); // Loading indicator
   const [showResult, setShowResult] = useState(false); // Toggle between greeting and conversation
+  const [allowSending, setAllowSending] = useState(true);
   const onSent = async (prompt) => {
+    setAllowSending(false)
   setLoading(true);
 
   setShowResult(true);
@@ -39,7 +41,6 @@ const ContextProvider = (props) => {
     .replace(/# (.*?)\n/g, "<h1>$1</h1>")
     .replace(/- (.*?)\n/g, "<li>$1</li>")
     .replace(/<li>(.*?)<\/li>/g, "<ul><li>$1</li></ul>");
-
   setMessages((prevMessages) => {
     const updatedMessages = [...prevMessages];
     updatedMessages[updatedMessages.length - 1] = { type: "bot", text: formattedResponse };
@@ -59,12 +60,15 @@ const ContextProvider = (props) => {
       });
       if (index === words.length - 1) {
         setLoading(false);
+        setAllowSending(true);
       }
     setLoading(false);
 
       }, index * 150);
     });
+
   };
+
 
   const contextValue = {
     messages,
@@ -73,6 +77,7 @@ const ContextProvider = (props) => {
     setInput,
     loading,
     showResult,
+    allowSending
   };
 
   return (

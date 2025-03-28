@@ -1,3 +1,8 @@
+// IF MODYING THE SIDEBAR PLZ CHANGE THE CONTEXT VALUES USED 
+// AS prevPrompts, recentPrompt, timeouts, dataFetched NO LONGER EXIST
+// I REPLACED THEM WITH A MESSAGE ARRAY STORING BOTH USER PROMPTS AND 
+// CHATBOT REPLY
+
 import React, { useContext, useState } from "react";
 import "./Sidebar.css";
 import { assets } from "../../assets/assets";
@@ -16,8 +21,8 @@ const Sidebar = () => {
 
   const loadPrompt = async (prompt) => {
     if (dataFetched) {
-      clearAllTimeouts(); // Clear any pending timeouts
-      setResultData(""); // Reset the result data
+      // clearAllTimeouts(); 
+      setResultData(""); 
       setRecentPrompt(prompt);
       await onSent(prompt);
   };

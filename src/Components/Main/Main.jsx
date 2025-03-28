@@ -24,6 +24,7 @@ const Main = () => {
     setInput,
     input,
     messages,
+    allowSending
   } = useContext(Context);
 
   const chatEndRef = useRef(null);
@@ -93,7 +94,7 @@ const Main = () => {
           <input
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && input.trim()) {
+              if (e.key === "Enter" && input.trim() && allowSending) {
                 onSent(input);
                 scrollToBottom(); 
 
@@ -108,7 +109,7 @@ const Main = () => {
             <img src={assets.add_file} alt="" />
             <img
                onClick={() => {
-                if (input) {
+                if (input.trim() && allowSending) {
                   onSent(input); 
                   scrollToBottom(); 
                 }
