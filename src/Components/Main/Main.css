@@ -1,9 +1,15 @@
+body{
+  background-color: #E3F2FD;
+
+
+}
 .main{
   flex: 1;
   min-height: 100vh;
   /* padding-bottom: 15vh; */
   position: relative;
   /* overflow-y: scroll; */
+  
   
 }
 /* 
@@ -14,11 +20,14 @@
 .main .nav{
   position: sticky;
   top: 0;
-  background-color: white;
+  /* background-color: #F8F9FA; */
+  backdrop-filter: blur(1000px);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 22px;
+  font-size: 28px;
+  font-weight: 600;
   padding: 20px;
   color: #585858;
   z-index: 10000;
@@ -42,7 +51,7 @@
 .main .greet{
   margin: 30px 0px;
   font-size: 56px;
-  color: #c4c7c5;
+  color: #737474;
   font-weight: 500;
   padding: 17px;
   /* text-align: center; */
@@ -78,7 +87,7 @@
   height: 200px;
   width: 200px;
   padding: 15px;
-  background-color: #f0f4f9;
+  background-color: #f2f9fe;
   border-radius: 10px;
   cursor: pointer;
   position: relative;
@@ -89,7 +98,7 @@
   width: 35px;
   padding: 5px;
   position: absolute;
-  background-color: white;
+  background-color: #f2f9fe;
   border-radius: 25px;
   bottom: 10px;
   right: 10px;
@@ -116,7 +125,9 @@
   padding: 0px 20px 10px 20px;
   margin: auto;
   z-index: 100;
-  background: white;
+  /* background-color: #F8F9FA; */
+  background-color: #E3F2FD;
+
   height: 90px;
   margin-top: 30px;
 
@@ -127,7 +138,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  background-color: #f0f4f9;
+  background-color: #f2f9fe;
   padding: 10px 20px;
   border-radius: 50px;
 }
@@ -161,6 +172,15 @@
 .transparent{
   height: 120px;
 }
+.user{
+  font-weight: 600;
+  color: #0c0000;
+}
+.bot{
+  font-weight: 500;
+
+}
+
 
 .result{
   padding: 0px 2%;
@@ -168,6 +188,7 @@
   /* padding-bottom: 25px; */
   margin-bottom: 40px;
   overflow-y: auto;
+  
 }
 
 .result::-webkit-scrollbar{
@@ -179,6 +200,7 @@
   display: flex;
   gap: 20px;
   transform: translateX(-2%);
+  
 }
 
 .result img{
@@ -190,6 +212,7 @@
 
 .result p{
   line-height:35px;
+  
 
 }
 
@@ -199,10 +222,8 @@
   gap: 20px;
   max-height: calc(100vh - 200px); 
   padding: 0px 20px;
-  background-color: #ffffff;
   border-radius: 10px;
 }
-
 
 
 .loader {
@@ -248,7 +269,6 @@
 
 .result_data p{
   font-size: 0.9rem;
-  font-weight: 300;
   line-height: 1.8;
 }
 
@@ -292,7 +312,7 @@ code {
 
 .message.user p {
   background-color: #4b90ff;
-  color: white;
+  color: #F8F9FA;
   max-width: 70%;
   padding: 10px;
   border-radius: 10px;
