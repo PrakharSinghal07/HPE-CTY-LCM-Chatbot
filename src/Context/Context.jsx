@@ -39,17 +39,20 @@ const ContextProvider = (props) => {
     const formattedResponse = response
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") // Bold
-    .replace(/\*(.*?)\*/g, "<i>$1</i>") // Italics
-    .replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>") // Code block
-    .replace(/`([^`]+)`/g, "<code>$1</code>") // Inline code
-    .replace(/(?:\r\n|\r|\n)/g, "<br>") // Line breaks
-    .replace(/### (.*?)\n/g, "<h3>$1</h3>") // H3
-    .replace(/## (.*?)\n/g, "<h2>$1</h2>") // H2
-    .replace(/# (.*?)\n/g, "<h1>$1</h1>") // H1
-    .replace(/^- (.*?)$/gm, "<ul><li>$1</li></ul>") // Convert `- item` to `<ul><li>item</li></ul>`
-    .replace(/^\* (.*?)$/gm, "<ul><li>$1</li></ul>") // Convert `* item` to `<ul><li>item</li></ul>`
-    .replace(/<\/ul>\s*<ul>/g, ""); // Merge consecutive `<ul>` tags
+    .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") 
+    .replace(/\*(?!\s)(.*?)\*/g, "<i>$1</i>") 
+    .replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>") 
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/(?:\r\n|\r|\n)/g, "<br>") 
+    .replace(/^### (.*?)$/gm, "<h3>$1</h3>") 
+    .replace(/^## (.*?)$/gm, "<h2>$1</h2>") 
+    .replace(/^# (.*?)$/gm, "<h1>$1</h1>") 
+    .replace(/^\d+\.\s(.*)$/gm, "<ol><li>$1</li></ol>") 
+    .replace(/<\/ol>\s*<ol>/g, "") 
+    .replace(/^[-*]\s(.*)$/gm, "<ul><li>$1</li></ul>")
+    .replace(/<\/ul>\s*<ul>/g, ""); 
+
+
 
     const words = formattedResponse.split(" ");
     let currentText = "";
