@@ -4,7 +4,7 @@
   --greet-text-color: #737474;
   --card-background-color: #f2f9fe;
   --card-hover-background-color: #dfe4ea;
-  --search-box-background-color: #f2f9fe;
+  --search-box-background-color: #d1ebfd;;
   --user-message-background-color: #4b90ff;
   --user-message-text-color: #F8F9FA;
   --bot-message-background-color: #f1f1f1;
@@ -117,7 +117,7 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb);
+  background: linear-gradient(135deg, rgb(127, 136, 136));
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -162,15 +162,20 @@ body {
 
 /* Cards Section */
 .main .cards {
+  max-width: 80%;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Decreased min width to 200px */
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Decreased min width to 200px */
   justify-content: center;
   align-items: center;
   gap: 5px; /* Adjusted gap for better spacing */
   padding: 5px;
-  background: linear-gradient(135deg, #fdfbfb, #ebedee);
+  background: linear-gradient(135deg, rgb(250, 214, 147), rgb(171, 169, 169), rgb(143, 246, 143));
   border-radius: 15px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  background-size: 200% 200%;
+  background-position: 0% 50%; 
+  animation: gradientShift 6s ease infinite;
 }
 
 .main .card {
@@ -178,7 +183,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 217px;
+  height: 187px;
   padding: 20px;
   background-color: var(--card-background-color);
   border-radius: 15px;
@@ -270,12 +275,31 @@ body {
 }
 
 .user {
-  font-weight: 600;
+  font-weight: 400;
   /* color: #0c0000; */
+  
+  
 }
 
+.user p{
+  background-color: #d1ebfd;
+  padding: 5px 15px;
+  border-radius: 10px;
+  transform: translateY(-2px);
+  font-size:20px;
+}
+.dark-mode .user p{
+  background-color: var(--search-box-background-color);
+}
+
+
 .bot {
-  font-weight: 500;
+  font-weight: 400;
+  margin-bottom: 50px !important;
+}
+
+.bot p{
+  font-size: 20px;
 }
 
 .result {
@@ -303,7 +327,7 @@ body {
 }
 
 .result p {
-  line-height: 35px;
+  line-height: 40px;
 }
 
 .result_data {
@@ -355,7 +379,7 @@ body {
 }
 
 .result_data p {
-  font-size: 0.9rem;
+  /* font-size: 0.9rem; */
   line-height: 1.8;
 }
 
@@ -422,25 +446,48 @@ code {
   .main .cards {
     display: none;
   }
-}
 
+  .greetMsg{
+    font-size: 25px;
+  }
 
-
-@media (max-width: 1101px){
-  .card2{
-    display: none !important;
+  .greet span{
+    font-size: 40px !important;
   }
 }
 
 
-@media (max-width: 742px){
+
+@media (max-width: 1249px){
+  /* .card2{
+    display: none !important;
+  } */
+}
+
+
+@media (max-width: 842px){
   .main .cards {
     display: none;
   }
 }
 
+@media (max-width: 837px){
+  .card1{
+    display: none !important;
+  }
+  
+}
+
+
 @media (max-width: 900px){
   .main .greet span{
     font-size: 50px;
   }
+}
+
+
+@media (max-width: 480px){
+  /* .main_container{
+    max-width: 70vw;
+  } */
 }

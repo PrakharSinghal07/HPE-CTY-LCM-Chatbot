@@ -47,7 +47,7 @@ const Main = () => {
       <div className="main_container">
         {!showResult ? (
           <>
-            <div className="greet"><p><span>Hello, Dev</span></p><p>How can I help you today?</p></div>
+            <div className="greet"><p><span>Hello, Dev</span></p><p className="greetMsg">How can I help you today?</p></div>
             <div className="cards">{cardText.map((text, i) => (<Card key={i} cardText={text} index={i} />))}</div>
           </>
         ) : (
