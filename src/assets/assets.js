@@ -13,6 +13,9 @@ import code_icon from './code_icon.png'
 import send_icon from './send_icon.png'
 import chatbot_icon from './chatbot.png'
 import add_file from './add-file.png'
+import stop_button from './stop-button.png'
+import night_mode from './night-mode.png'
+import light_mode from './light-mode.png'
 
 export const assets = {
     history_icon,
@@ -29,5 +32,8 @@ export const assets = {
     code_icon,
     send_icon,
     chatbot_icon,
-    add_file
+    add_file,
+    stop_button,
+    night_mode,
+    light_mode
 }

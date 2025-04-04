@@ -1,11 +1,12 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import "./Main.css";
 import { assets } from "../../assets/assets";
 import Card from "./Card";
 import { Context } from "../../Context/Context";
 
 const Main = () => {
-  const cardText = ["Why is my node frequently rebooting?", "How to debug a failed build?", "How to resolve dependency conflicts?"];
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const cardText = ["Why is my node frequently rebooting?", "How do I debug build failures properly?", "How to resolve dependency conflicts?"];
   const cardImages = [assets.compass_icon, assets.bulb_icon, assets.message_icon, assets.code_icon];
   const { 
     onSent, 
@@ -14,19 +15,40 @@ const Main = () => {
     setInput, 
     input, 
     messages, 
-    allowSending 
+    allowSending,
+    stopReply,
+    stopIcon 
   } = useContext(Context);
   
   const chatEndRef = useRef(null);
   const scrollToBottom = () => chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const toggleDarkMode = () => {
+    setIsDarkMode((prevMode) => {
+      const newMode = !prevMode;
+      if (newMode) {
+        document.documentElement.classList.add("dark-mode"); 
+      } else {
+        document.documentElement.classList.remove("dark-mode"); 
+      }
+      return newMode;
+    });
+  };
   return (
-    <div className="main">
-      <div className="nav"><p>ChatBot</p><img src={assets.user_icon} alt="" /></div>
+    <div className={`main`}>
+      <div className="nav"><p>ChatBot</p> <div className="nav_right"> <div className="nav_right">
+          <img
+            className={isDarkMode ? "light_mode_icon" : "dark_mode_icon"}
+            src={isDarkMode ? assets.light_mode : assets.night_mode}
+            onClick={toggleDarkMode}
+            alt={isDarkMode ? "Light Mode" : "Dark Mode"}
+          />
+          <img src={assets.user_icon} alt="User" />
+        </div></div> </div>
       <div className="main_container">
         {!showResult ? (
           <>
             <div className="greet"><p><span>Hello, Dev</span></p><p>How can I help you today?</p></div>
-            <div className="cards">{cardText.map((text, i) => (<Card key={i} cardText={text} cardImage={cardImages[i]} />))}</div>
+            <div className="cards">{cardText.map((text, i) => (<Card key={i} cardText={text} index={i} />))}</div>
           </>
         ) : (
           messages.map((message, index) => (
@@ -55,7 +77,14 @@ const Main = () => {
           <input onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && input.trim() && allowSending) { onSent(input); scrollToBottom(); }}} value={input} type="text" placeholder="Ask anything" />
           <div>
             <img src={assets.mic_icon} alt="" /><img src={assets.add_file} alt="" />
-            <img onClick={() => { if (input.trim() && allowSending) { onSent(input); scrollToBottom(); }}} src={assets.send_icon} alt="" />
+            <img onClick={() => {
+                if (stopIcon) {
+                  stopReply(); 
+                } else if (input.trim() && allowSending) {
+                  onSent(input); 
+                  scrollToBottom();
+                }
+              }} src={stopIcon ? assets.stop_button  : assets.send_icon} alt="" />
           </div>
         </div>
         <p className="bottom_info">Chatbot can make mistakes. Check important info.</p>

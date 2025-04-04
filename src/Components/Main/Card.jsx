@@ -2,15 +2,14 @@ import React, { useContext } from 'react'
 import { Context } from '../../Context/Context';
 
 
-const Card = ({cardText, cardImage}) => {
+const Card = ({cardText, index}) => {
   const { setInput } =
     useContext(Context);
   return (
-    <div className="card" onClick={() => {
+    <div className={`card card${index}`} onClick={() => {
       setInput(cardText)
     }}>
             <p>{cardText}</p>
-            <img src={cardImage} alt="" />
           </div>
   )
 }
