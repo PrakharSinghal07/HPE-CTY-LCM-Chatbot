@@ -1,6 +1,6 @@
 import { createContext, useState, useRef } from "react";
 import run from "../config/gemini";
-
+import { marked } from "marked";
 export const Context = createContext();
 
 const ContextProvider = (props) => {
@@ -35,22 +35,8 @@ const ContextProvider = (props) => {
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     const response = await run(prompt || input);
-
-    const formattedResponse = response
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") 
-    .replace(/\*(?!\s)(.*?)\*/g, "<i>$1</i>") 
-    .replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>") 
-    .replace(/`([^`]+)`/g, "<code>$1</code>")
-    .replace(/(?:\r\n|\r|\n)/g, "<br>") 
-    .replace(/^### (.*?)$/gm, "<h3>$1</h3>") 
-    .replace(/^## (.*?)$/gm, "<h2>$1</h2>") 
-    .replace(/^# (.*?)$/gm, "<h1>$1</h1>") 
-    .replace(/^\d+\.\s(.*)$/gm, "<ol><li>$1</li></ol>") 
-    .replace(/<\/ol>\s*<ol>/g, "") 
-    .replace(/^[-*]\s(.*)$/gm, "<ul><li>$1</li></ul>")
-    .replace(/<\/ul>\s*<ul>/g, ""); 
+    console.log(response);
+    const formattedResponse = marked(response);
 
 
 

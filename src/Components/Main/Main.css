@@ -46,7 +46,7 @@ html, body{
 .main {
   flex: 1;
   min-height: 100vh;
-  /* position: relative; */
+  position: relative;
 }
 
 .main .nav {
@@ -68,9 +68,8 @@ html, body{
 }
 
 .dark_mode_icon{
-  /* filter: brightness(1.2) invert(0.8); */
   height: 35px;
-  width: 35px !important; /* Adjusted size for better visibility */
+  width: 35px !important; 
   cursor: pointer;
   /* transform: translateY(-3px); */
   transition: transform 0.3s ease, filter 0.3s ease; 
@@ -78,7 +77,7 @@ html, body{
 .light_mode_icon{
   /* filter: brightness(1.2) invert(0.8); */
   height: 35px;
-  width: 35px !important; /* Adjusted size for better visibility */
+  width: 35px !important; 
   cursor: pointer;
   /* transform: translateY(1px); */
   transition: transform 0.3s ease, filter 0.3s ease; 
@@ -110,8 +109,8 @@ html, body{
   max-width: 84vw;
   margin: auto;
 }
+ 
 
-/* Greeting Section */
 .main .greet {
   margin: 30px 0 50px 0;
   font-size: 48px;
@@ -315,9 +314,6 @@ html, body{
   /* overflow-y: auto; */
 }
 
-.result::-webkit-scrollbar {
-  /* display: none; */
-}
 
 .result_title {
   /* margin: 10px 0px; */
@@ -394,7 +390,7 @@ html, body{
 
 .result_data p {
   /* font-size: 0.9rem; */
-  line-height: 1.8;
+  line-height: 2.5;
 }
 
 .message {
@@ -471,14 +467,6 @@ code {
 }
 
 
-
-@media (max-width: 1249px){
-  /* .card2{
-    display: none !important;
-  } */
-}
-
-
 @media (max-width: 842px){
   .main .cards {
     display: none;
@@ -499,9 +487,3 @@ code {
   }
 }
 
-
-@media (max-width: 480px){
-  /* .main_container{
-    max-width: 70vw;
-  } */
-}

@@ -13,6 +13,7 @@
     "@google/genai": "^0.6.1",
     "@google/generative-ai": "^0.24.0",
     "dotenv": "^16.4.7",
+    "marked": "^15.0.7",
     "mime-types": "^2.1.35",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
