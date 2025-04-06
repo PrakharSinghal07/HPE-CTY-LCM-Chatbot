@@ -60,7 +60,10 @@ const Main = () => {
                     {index === messages.length - 1 && loading ? (
                       <div className="loader"><span></span><span></span><span></span></div>
                     ) : (
+                      <div className="hello">
                       <p dangerouslySetInnerHTML={{ __html: message.text }}></p>
+                      {index === messages.length - 1 ? <div className="temp"></div> : null}
+                      </div>
                     )}
                   </div>
                 ) : (

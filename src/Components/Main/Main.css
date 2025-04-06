@@ -38,10 +38,15 @@ body {
   color: var(--text-color);
 }
 
+
+html, body{
+  height: 100%;
+}
+
 .main {
   flex: 1;
   min-height: 100vh;
-  position: relative;
+  /* position: relative; */
 }
 
 .main .nav {
@@ -102,7 +107,7 @@ body {
 
 
 .main_container {
-  max-width: 70vw;
+  max-width: 84vw;
   margin: auto;
 }
 
@@ -214,7 +219,7 @@ body {
   position: fixed;
   bottom: 0px;
   width: 100%;
-  max-width: 76vw;
+  max-width: 85vw;
   left: 50%;
   transform: translate(-50%, 0%);
   padding: 0px 20px 10px 20px;
@@ -276,6 +281,7 @@ body {
 
 .user {
   font-weight: 400;
+  margin: 81px 0px 10px 0px;
   /* color: #0c0000; */
   
   
@@ -296,6 +302,7 @@ body {
 .bot {
   font-weight: 400;
   margin-bottom: 50px !important;
+  margin-bottom: 40px;
 }
 
 .bot p{
@@ -305,15 +312,15 @@ body {
 .result {
   padding: 0px 2%;
   margin-bottom: 40px;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
 .result::-webkit-scrollbar {
-  display: none;
+  /* display: none; */
 }
 
 .result_title {
-  margin: 10px 0px;
+  /* margin: 10px 0px; */
   display: flex;
   gap: 20px;
   transform: translateX(-2%);
@@ -334,9 +341,16 @@ body {
   display: flex;
   align-items: start;
   gap: 20px;
-  max-height: calc(100vh - 200px);
   padding: 0px 20px;
   border-radius: 10px;
+}
+.hello{
+  display: flex;
+  flex-direction: column;
+}
+.temp{
+  height: 90px;
+  width: 100%;
 }
 
 .loader {
