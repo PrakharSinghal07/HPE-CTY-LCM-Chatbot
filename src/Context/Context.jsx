@@ -35,7 +35,7 @@ const ContextProvider = (props) => {
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     const response = await run(prompt || input);
-    console.log(response);
+    
     const formattedResponse = marked(response);
 
 
