@@ -6,7 +6,6 @@ import { Context } from "../../Context/Context";
 
 const Main = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const cardText = ["Why is my node frequently rebooting?", "How do I debug build failures properly?", "How to resolve dependency conflicts?"];
   const cardImages = [assets.compass_icon, assets.bulb_icon, assets.message_icon, assets.code_icon];
   const { 
     onSent, 
@@ -14,11 +13,14 @@ const Main = () => {
     loading, 
     setInput, 
     input, 
-    messages, 
+    conversation, 
     allowSending,
     stopReply,
-    stopIcon 
+    stopIcon,
+    suggestions 
   } = useContext(Context);
+
+  const cardText = suggestions;
   
   const chatEndRef = useRef(null);
   const scrollToBottom = () => chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -45,35 +47,35 @@ const Main = () => {
           <img src={assets.user_icon} alt="User" />
         </div></div> </div>
       <div className="main_container">
-        {!showResult ? (
+        {conversation.messages === undefined || conversation.messages.length === 0 ? (
           <>
             <div className="greet"><p><span>Hello, Dev</span></p><p className="greetMsg">How can I help you today?</p></div>
             <div className="cards">{cardText.map((text, i) => (<Card key={i} cardText={text} index={i} />))}</div>
           </>
         ) : (
-          messages.map((message, index) => (
+          conversation.messages.map((message, index) => (
             <div key={index} className="result">
               <div className={`result_title ${message.type}`}>
                 {message.type === "bot" ? (
                 <div className={`result_data`}>
-                    <img src={assets.chatbot_icon} alt="" />
-                    {index === messages.length - 1 && loading ? (
+                    {/* <img src={assets.chatbot_icon} alt="" /> */}
+                    {index === conversation.messages.length - 1 && loading ? (
                       <div className="loader"><span></span><span></span><span></span></div>
                     ) : (
                       <div className="hello">
+                        {/* {scrollToBottom()} */}
                       <p dangerouslySetInnerHTML={{ __html: message.text }}></p>
-                      {index === messages.length - 1 ? <div className="temp"></div> : null}
+                      
                       </div>
                     )}
                   </div>
                 ) : (
-                  <><img src={assets.user_icon} alt="User" /><p>{message.text}</p></>
+                  <><p>{message.text}</p></>
                 )}
               </div>
             </div>
           ))
         )}
-        <div ref={chatEndRef}></div>
       </div>
       <div className="main_bottom">
         <div className="search_box">
@@ -93,6 +95,8 @@ const Main = () => {
         <p className="bottom_info">Chatbot can make mistakes. Check important info.</p>
       </div>
       <div className="transparent"></div>
+      <div ref={chatEndRef}></div>
+
     </div>
   );
 };

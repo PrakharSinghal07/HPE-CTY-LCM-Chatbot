@@ -59,6 +59,7 @@ html, body{
   font-size: 28px;
   font-weight: 600;
   padding: 20px;
+  padding-inline: 300px;
   color: var(--nav-text-color);
   z-index: 10000;
 }
@@ -105,9 +106,13 @@ html, body{
 
 
 
+
 .main_container {
-  max-width: 84vw;
+  max-width: 56vw;
   margin: auto;
+  /* padding-inline: 90px; */
+  display: flex;
+  flex-direction: column;
 }
  
 
@@ -217,7 +222,7 @@ html, body{
 .main_bottom {
   position: fixed;
   bottom: 0px;
-  width: 100%;
+  width: 66%;
   max-width: 85vw;
   left: 50%;
   transform: translate(-50%, 0%);
@@ -275,12 +280,13 @@ html, body{
 }
 
 .transparent {
-  height: 120px;
+  height: 350px;
 }
 
 .user {
   font-weight: 400;
-  margin: 81px 0px 10px 0px;
+  margin: 0px 0px 50px 0px;
+  justify-content: flex-end;
   /* color: #0c0000; */
   
   
@@ -292,6 +298,7 @@ html, body{
   border-radius: 10px;
   transform: translateY(-2px);
   font-size:20px;
+  max-width: 70%;
 }
 .dark-mode .user p{
   background-color: var(--search-box-background-color);
@@ -300,8 +307,8 @@ html, body{
 
 .bot {
   font-weight: 400;
-  margin-bottom: 50px !important;
-  margin-bottom: 40px;
+  margin-bottom: 60px !important;
+  /* margin-bottom: 30px; */
 }
 
 .bot p{
@@ -310,7 +317,7 @@ html, body{
 
 .result {
   padding: 0px 2%;
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
   /* overflow-y: auto; */
 }
 
@@ -337,8 +344,9 @@ html, body{
   display: flex;
   align-items: start;
   gap: 20px;
-  padding: 0px 20px;
+  /* padding: 0px 20px; */
   border-radius: 10px;
+  /* margin-bottom: 20px; */
 }
 .hello{
   display: flex;
