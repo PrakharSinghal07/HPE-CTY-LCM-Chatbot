@@ -1,15 +1,11 @@
-// IF MODYING THE SIDEBAR PLZ CHANGE THE CONTEXT VALUES USED
-// AS prevPrompts, recentPrompt, timeouts, dataFetched NO LONGER EXIST
-// I REPLACED THEM WITH A MESSAGE ARRAY STORING BOTH USER PROMPTS AND
-// CHATBOT REPLY
-
 import React, { useContext, useState } from "react";
 import "./Sidebar.css";
 import { assets } from "../../assets/assets";
 import { Context } from "../../Context/Context";
 
 const Sidebar = () => {
-  const { conversation } = useContext(Context);
+  const { conversations, setActiveConversationId, activeConversationId, createNewChat} =
+    useContext(Context);
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
   const handleMenuIconClicked = () => {
@@ -27,7 +23,7 @@ const Sidebar = () => {
         />
         <div
           className="new_chat"
-          onClick={() => console.log("New Chat Clicked")}
+          onClick={createNewChat}
         >
           <img src={assets.plus_icon} alt="New Chat" />
           {sidebarExpanded && <p>New Chat</p>}
@@ -35,13 +31,25 @@ const Sidebar = () => {
         {sidebarExpanded && (
           <div className="recent">
             <p className="recent_title">Recent</p>
-            <div
+            {/* <div
               className="recent_entry"
               onClick={() => console.log("Recent Chat Clicked")}
             >
               <img src={assets.message_icon} alt="Message" />
               <p>{conversation.title.slice(0, 18)}...</p>
-            </div>
+            </div> */}
+            {conversations.map((conv) => (
+              <div
+                key={conv.sessionId}
+                className={`chat-title recent_entry ${
+                  activeConversationId === conv.sessionId ? "active" : ""
+                }`}
+                onClick={() => setActiveConversationId(conv.sessionId)}
+              >
+                {/* <img src={assets.message_icon} alt="Message" /> */}
+                <p>{conv.title?.slice(0, 18) || "Untitled Chat"}...</p>
+              </div>
+            ))}
           </div>
         )}
       </div>

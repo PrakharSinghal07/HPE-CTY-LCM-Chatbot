@@ -28,7 +28,7 @@
 }
 
 .sidebar.expanded {
-  max-width: 250px;
+  width: 230px;
 }
 
 .sidebar.collapsed {
@@ -90,18 +90,25 @@
 .sidebar .recent_entry {
   display: flex;
   align-items: center;
+  /* justify-content: center; */
   gap: 10px;
   padding: 10px;
-  padding-right: 40px;
-  border-radius: 50px;
-  color: #b0b0b0;
+  /* padding-left: 0px; */
+  /* padding-right: 40px; */
+  border-radius: 5px;
+  color: #f3f3f3;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
+  /* background-color: rgb(9, 9, 9); */
 }
 
 .sidebar .recent_entry:hover {
-  background-color: #3a3b3c;
-  transform: translateY(-2px);
+  /* background-color: #3a3b3c; */
+  transform: translateX(2px);
+}
+
+.active{
+  background-color: rgb(34, 34, 34);
 }
 
 .sidebar .bottom {

@@ -62,6 +62,7 @@ html, body{
   padding-inline: 300px;
   color: var(--nav-text-color);
   z-index: 10000;
+  margin-bottom: 40px;
 }
 .light_mode_icon{
 

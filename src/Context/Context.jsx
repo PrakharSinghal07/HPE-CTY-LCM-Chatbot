@@ -1,5 +1,6 @@
 import { createContext, useState, useRef, useEffect } from "react";
 import { marked } from "marked";
+
 export const Context = createContext();
 
 const ContextProvider = (props) => {
@@ -9,33 +10,71 @@ const ContextProvider = (props) => {
   const [allowSending, setAllowSending] = useState(true);
   const [stopIcon, setStopIcon] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
-  const [isTypingCompleted, setIsTypingCompleted] = useState(false);
+  const [isTypingCompleted, setIsTypingCompleted] = useState(true);
   const stopReplyRef = useRef(false);
   const timeoutIdsRef = useRef([]);
   const firstMessage = useRef(1);
   const titleQuery = useRef("New Chat");
+  const [messageVersion, setMessageVersion] = useState(0);
+
   const [conversation, setConversation] = useState({
     sessionId: crypto.randomUUID(),
     title: "New Chat",
-    messages: []
+    messages: [],
   });
+
+  const [conversations, setConversations] = useState([]);
+  const [activeConversationId, setActiveConversationId] = useState(null);
+  const hasMounted = useRef(false);
+
+  const createNewChat = () => {
+    const newChat = {
+      sessionId: crypto.randomUUID(),
+      title: "New Chat",
+      messages: [],
+    };
+    setConversation(newChat);
+    setActiveConversationId(newChat.sessionId);
+    setConversations((prev) => [newChat, ...prev]);
+  };
 
   useEffect(() => {
     const getConvo = async () => {
-      const response = await fetch("http://127.0.0.1:8000/conversation/", {
+      const response = await fetch("http://127.0.0.1:8000/conversation/all", {
         method: "GET",
       });
       const result = await response.json();
-      setConversation({
-        sessionId: result.sessionId || crypto.randomUUID(),
-        title: result.title || "New Chat",
-        messages: Array.isArray(result.messages) ? result.messages : [],
-      });
-    };
-    getConvo();
-  }, []);   
-  
 
+      if (result.length === 0) {
+        const newConvo = {
+          sessionId: crypto.randomUUID(),
+          title: "New Chat",
+          messages: [],
+        };
+        setConversation(newConvo);
+        setConversations([newConvo]);
+        setActiveConversationId(newConvo.sessionId);
+      } else {
+        setConversations(result);
+        setActiveConversationId(result[0].sessionId);
+      }
+    };
+
+    getConvo();
+  }, []);
+
+  // ✅ Sync conversation with activeConversationId — only after typing is complete
+  useEffect(() => {
+    if (!activeConversationId || !isTypingCompleted) return;
+
+    const activeConv = conversations.find(
+      (conv) => conv.sessionId === activeConversationId
+    );
+
+    if (activeConv && activeConv.sessionId !== conversation.sessionId) {
+      setConversation(activeConv);
+    }
+  }, [activeConversationId, conversations, isTypingCompleted]);
 
   useEffect(() => {
     setConversation((prev) => ({
@@ -45,26 +84,47 @@ const ContextProvider = (props) => {
     console.log(firstMessage.current);
   }, [firstMessage.current]);
 
+  useEffect(() => {
+    setConversations((prev) => {
+      const isAlreadyPresent = prev.some(
+        (c) => c.sessionId === conversation.sessionId
+      );
+      if (isAlreadyPresent) {
+        return prev.map((c) =>
+          c.sessionId === conversation.sessionId ? conversation : c
+        );
+      } else {
+        return [conversation, ...prev];
+      }
+    });
+  }, [isTypingCompleted]);
 
   useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+
     const postData = async () => {
       try {
-        const response = await fetch("http://localhost:8000/conversation/", {
+        console.log("Posting conversations to backend:");
+        console.log(JSON.stringify(conversations, null, 2)); // nicely formatted
+        await fetch("http://localhost:8000/conversation/all", {
           method: "POST",
           headers: {
             "Content-type": "application/json",
           },
-          body: JSON.stringify(conversation),
+          body: JSON.stringify(conversations),
         });
       } catch (error) {
-        console.log(error);
+        console.error("Error posting to backend:", error);
       }
     };
+    
+
     postData();
-  }, [isTypingCompleted]);
+  }, [conversations]);
 
-
-  
   const clearAllTimeouts = () => {
     timeoutIdsRef.current.forEach(clearTimeout);
     timeoutIdsRef.current = [];
@@ -74,7 +134,6 @@ const ContextProvider = (props) => {
     let response = await fetch("http://127.0.0.1:8000/suggestions/");
     response = await response.json();
     setSuggestions(response.suggestions);
-    // return response.suggestions
   };
 
   useEffect(() => {
@@ -82,32 +141,32 @@ const ContextProvider = (props) => {
   }, []);
 
   const onSent = async (prompt) => {
-    titleQuery.current = prompt;
-    firstMessage.current = firstMessage.current * 0;
+    const userPrompt = prompt || input;
+
+    if (conversation.title === "New Chat") {
+      setConversation((prev) => ({
+        ...prev,
+        title: userPrompt.slice(0, 20),
+      }));
+    }
+
     setAllowSending(false);
     setLoading(true);
     stopReplyRef.current = false;
     setStopIcon(true);
     setShowResult(true);
 
-    const userMessage = { type: "user", text: prompt || input };
+    const userMessage = { type: "user", text: userPrompt };
     const botMessage = { type: "bot", text: "" };
 
-    // setMessages((prevMessages) => [...prevMessages, userMessage, botMessage]);
     setConversation((prev) => ({
       ...prev,
       messages: [...prev.messages, userMessage, botMessage],
     }));
+
     setInput("");
 
     await new Promise((resolve) => setTimeout(resolve, 500));
-
-    // const response = await run(prompt || input);
-    const query = prompt;
-
-    const data = {
-      query: query,
-    };
     let botReply;
     try {
       const response = await fetch("http://127.0.0.1:8000/chat", {
@@ -115,12 +174,11 @@ const ContextProvider = (props) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ query: userPrompt }),
       });
 
       if (response.ok) {
         const result = await response.json();
-        console.log(result);
         botReply = result;
       } else {
         console.error("Error:", response.statusText);
@@ -128,6 +186,7 @@ const ContextProvider = (props) => {
     } catch (error) {
       console.error("Error:", error);
     }
+
     const formattedResponse = marked(botReply.response);
     setIsTypingCompleted(false);
     const words = formattedResponse.split(" ");
@@ -137,7 +196,6 @@ const ContextProvider = (props) => {
       const id = setTimeout(() => {
         if (stopReplyRef.current) {
           clearAllTimeouts();
-          // setMessages((prevMessages) => prevMessages.slice(0, -1));
           setConversation((prev) => ({
             ...prev,
             messages: [...prev.messages.slice(0, -1)],
@@ -147,29 +205,38 @@ const ContextProvider = (props) => {
           setStopIcon(false);
           return;
         }
-
+    
         currentText += word + " ";
         setConversation((prev) => {
           const updatedMessages = [...prev.messages];
-          updatedMessages[updatedMessages.length - 1].text = currentText;
-          return {
-            ...prev,
-            messages: updatedMessages,
-          };
+          if (updatedMessages.length > 0) {
+            updatedMessages[updatedMessages.length - 1] = {
+              ...updatedMessages[updatedMessages.length - 1],
+              text: currentText,
+            };
+            return { ...prev, messages: updatedMessages };
+          }
+          return prev;  // If no message to update, keep the previous state intact
         });
-
+    
+        // Log the updated conversation state
+        setTimeout(() => {
+          console.log("Current text:", currentText);
+          console.log("Updated conversation:", conversation);
+        }, 0);
+    
         if (index === words.length - 1) {
           setLoading(false);
           setStopIcon(false);
           setAllowSending(true);
-          // console.log(conversation);
           setIsTypingCompleted(true);
         }
         setLoading(false);
-      }, index * 40);
 
+      }, index * 40); // Adjust delay per word here
       timeoutIdsRef.current.push(id);
     });
+    
   };
 
   const stopReply = () => {
@@ -184,6 +251,9 @@ const ContextProvider = (props) => {
     <Context.Provider
       value={{
         conversation,
+        conversations,
+        setActiveConversationId,
+        activeConversationId,
         onSent,
         input,
         setInput,
@@ -193,6 +263,7 @@ const ContextProvider = (props) => {
         stopReply,
         stopIcon,
         suggestions,
+        createNewChat,
       }}
     >
       {props.children}

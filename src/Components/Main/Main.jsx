@@ -76,6 +76,7 @@ const Main = () => {
             </div>
           ))
         )}
+        {console.log("Rendering messages:", conversation.messages)}
       </div>
       <div className="main_bottom">
         <div className="search_box">
