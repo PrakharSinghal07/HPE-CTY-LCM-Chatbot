@@ -222,7 +222,8 @@ html, body{
 
 .main_bottom {
   position: fixed;
-  bottom: 0px;
+  /* bottom: 45px; */
+  bottom: -10px;
   width: 66%;
   max-width: 85vw;
   left: 50%;
@@ -233,16 +234,50 @@ html, body{
   background-color: var(--background-color);
   height: 90px;
   margin-top: 30px;
+  /* height: 120px; */
+}
+
+.main_bottom_with_file{
+  bottom: 45px;
+
 }
 
 .search_box {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  /* align-items: center; */
   justify-content: space-between;
   gap: 20px;
   background-color: var(--search-box-background-color);
   padding: 10px 20px;
-  border-radius: 50px;
+  /* padding-top: 20px; */
+  border-radius: 10px;
+
+}
+
+.tempo{
+  display: flex;
+  justify-content: center;
+}
+
+.file_container{
+  display: inline-flex;
+  padding-block: 8px;
+  padding-right: 12px;
+  padding-left: 4px;
+  background-color: #a6daff;
+  width: fit-content;
+  border-radius: 20px;
+}
+.dark-mode .file_container{
+  background-color: #171717;
+}
+.file_name{
+  font-size: 16px;
+  /* color: rgb(18, 18, 18); */
+}
+.dark_mode .file_name{
+  color: rgb(255, 255, 255);
 
 }
 
@@ -250,11 +285,17 @@ html, body{
   width: 24px;
   cursor: pointer;
 }
-
+.search_box .new_file{
+  transform: translateX(6px);
+  /* filter: brightness(-12.5) invert(1); */
+}
 .dark-mode .search_box img{
   width: 24px;
   cursor: pointer;
-  filter: brightness(1.5) invert(1);
+}
+.dark-mode .utility_icon{
+  filter: brightness(1.1) invert(1);
+
 }
 
 .search_box input {
@@ -263,14 +304,24 @@ html, body{
   border: none;
   outline: none;
   padding: 8px;
+  padding-left: 14px;
   font-size: 18px;
   color: var(--input-color);
 }
+.file_icon{
+  /* border: 3px solid rgb(2, 2, 2); */
+}
+
+
 
 .search_box div {
   display: flex;
   align-items: center;
   gap: 15px;
+}
+
+.file_label{
+  display: flex;
 }
 
 .main .bottom_info {

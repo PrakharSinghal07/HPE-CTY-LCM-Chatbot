@@ -140,7 +140,7 @@ const ContextProvider = (props) => {
     getSuggestions();
   }, []);
 
-  const onSent = async (prompt) => {
+  const onSent = async (prompt, file) => {
     const userPrompt = prompt || input;
 
     if (conversation.title === "New Chat") {
@@ -165,16 +165,17 @@ const ContextProvider = (props) => {
     }));
 
     setInput("");
-
+    const formData = new FormData();
+    formData.append("message", userPrompt)
+    if(file){
+      formData.append("file", file)
+    }
     await new Promise((resolve) => setTimeout(resolve, 500));
     let botReply;
     try {
       const response = await fetch("http://127.0.0.1:8000/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ query: userPrompt }),
+        body: formData,
       });
 
       if (response.ok) {
@@ -186,7 +187,7 @@ const ContextProvider = (props) => {
     } catch (error) {
       console.error("Error:", error);
     }
-
+    // setFile(null);
     const formattedResponse = marked(botReply.response);
     setIsTypingCompleted(false);
     const words = formattedResponse.split(" ");

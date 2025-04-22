@@ -17,6 +17,8 @@ import stop_button from './stop-button.png'
 import night_mode from './night-mode.png'
 import light_mode from './light-mode.png'
 import menu_bar from './menu-bar.png'
+import file from './file.png'
+import cross from './close.png'
 export const assets = {
     history_icon,
     menu_icon,
@@ -36,5 +38,7 @@ export const assets = {
     stop_button,
     night_mode,
     light_mode,
-    menu_bar
+    menu_bar,
+    file,
+    cross
 }

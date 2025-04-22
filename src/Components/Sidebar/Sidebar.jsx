@@ -6,7 +6,7 @@ import { Context } from "../../Context/Context";
 const Sidebar = () => {
   const { conversations, setActiveConversationId, activeConversationId, createNewChat} =
     useContext(Context);
-  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
   const handleMenuIconClicked = () => {
     setSidebarExpanded((prev) => !prev);

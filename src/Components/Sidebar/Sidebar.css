@@ -102,6 +102,9 @@
   /* background-color: rgb(9, 9, 9); */
 }
 
+.recent_entry p{
+  font-size: 17px;
+}
 .sidebar .recent_entry:hover {
   /* background-color: #3a3b3c; */
   transform: translateX(2px);
