@@ -63,7 +63,6 @@ const ContextProvider = (props) => {
     getConvo();
   }, []);
 
-  // ✅ Sync conversation with activeConversationId — only after typing is complete
   useEffect(() => {
     if (!activeConversationId || !isTypingCompleted) return;
 
@@ -217,14 +216,8 @@ const ContextProvider = (props) => {
             };
             return { ...prev, messages: updatedMessages };
           }
-          return prev;  // If no message to update, keep the previous state intact
+          return prev; 
         });
-    
-        // Log the updated conversation state
-        setTimeout(() => {
-          console.log("Current text:", currentText);
-          console.log("Updated conversation:", conversation);
-        }, 0);
     
         if (index === words.length - 1) {
           setLoading(false);
@@ -234,7 +227,7 @@ const ContextProvider = (props) => {
         }
         setLoading(false);
 
-      }, index * 40); // Adjust delay per word here
+      }, index * 40);
       timeoutIdsRef.current.push(id);
     });
     
