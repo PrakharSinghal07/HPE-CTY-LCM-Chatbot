@@ -3,6 +3,35 @@ import { marked } from "marked";
 
 export const Context = createContext();
 
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
+const generateNewChat = async () => {
+  try {
+    const response = await fetch("http://localhost:8000/conversation/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: "New Chat",
+        messages: [],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error posting to backend:", error);
+    return null;
+  }
+};
+
 const ContextProvider = (props) => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -10,129 +39,59 @@ const ContextProvider = (props) => {
   const [allowSending, setAllowSending] = useState(true);
   const [stopIcon, setStopIcon] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
-  const [isTypingCompleted, setIsTypingCompleted] = useState(true);
+
   const stopReplyRef = useRef(false);
-  const timeoutIdsRef = useRef([]);
-  const firstMessage = useRef(1);
-  const titleQuery = useRef("New Chat");
-  const [messageVersion, setMessageVersion] = useState(0);
 
-  const [conversation, setConversation] = useState({
-    sessionId: crypto.randomUUID(),
-    title: "New Chat",
-    messages: [],
-  });
-
-  const [conversations, setConversations] = useState([]);
+  const [conversation, setConversation] = useState({});
   const [activeConversationId, setActiveConversationId] = useState(null);
-  const hasMounted = useRef(false);
-
-  const createNewChat = () => {
-    const newChat = {
-      sessionId: crypto.randomUUID(),
-      title: "New Chat",
-      messages: [],
-    };
+  const [updateSidebar, setUpdateSidebar] = useState(true)
+  const [updateSidebar2, setUpdateSidebar2] = useState(true)
+  const createNewChat = async () => {
+    if(conversation.title !== "New Chat"){
+    const newChat = await generateNewChat();
     setConversation(newChat);
     setActiveConversationId(newChat.sessionId);
-    setConversations((prev) => [newChat, ...prev]);
+    }
   };
 
   useEffect(() => {
     const getConvo = async () => {
-      const response = await fetch("http://127.0.0.1:8000/conversation/all", {
+      const response = await fetch(`http://127.0.0.1:8000/conversation/initial`, {
         method: "GET",
       });
       const result = await response.json();
+      {
+        setConversation(result);
 
-      if (result.length === 0) {
-        const newConvo = {
-          sessionId: crypto.randomUUID(),
-          title: "New Chat",
-          messages: [],
-        };
-        setConversation(newConvo);
-        setConversations([newConvo]);
-        setActiveConversationId(newConvo.sessionId);
-      } else {
-        setConversations(result);
-        setActiveConversationId(result[0].sessionId);
+        setActiveConversationId(result.sessionId);
       }
     };
-
     getConvo();
-  }, []);
+  }, [updateSidebar2]);
 
   useEffect(() => {
-    if (!activeConversationId || !isTypingCompleted) return;
-
-    const activeConv = conversations.find(
-      (conv) => conv.sessionId === activeConversationId
-    );
-
-    if (activeConv && activeConv.sessionId !== conversation.sessionId) {
-      setConversation(activeConv);
-    }
-  }, [activeConversationId, conversations, isTypingCompleted]);
-
-  useEffect(() => {
-    setConversation((prev) => ({
-      ...prev,
-      title: titleQuery.current,
-    }));
-    console.log(firstMessage.current);
-  }, [firstMessage.current]);
-
-  useEffect(() => {
-    setConversations((prev) => {
-      const isAlreadyPresent = prev.some(
-        (c) => c.sessionId === conversation.sessionId
+    if (!activeConversationId) return;
+    const getCurrentConversation = async () => {
+      const response = await fetch(
+        `http://127.0.0.1:8000/conversation/active/${activeConversationId}`
       );
-      if (isAlreadyPresent) {
-        return prev.map((c) =>
-          c.sessionId === conversation.sessionId ? conversation : c
-        );
-      } else {
-        return [conversation, ...prev];
-      }
-    });
-  }, [isTypingCompleted]);
-
-  useEffect(() => {
-    if (!hasMounted.current) {
-      hasMounted.current = true;
-      return;
-    }
-
-    const postData = async () => {
-      try {
-        console.log("Posting conversations to backend:");
-        console.log(JSON.stringify(conversations, null, 2)); // nicely formatted
-        await fetch("http://localhost:8000/conversation/all", {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(conversations),
-        });
-      } catch (error) {
-        console.error("Error posting to backend:", error);
-      }
+      const result = await response.json();
+      // console.log(result);
+      if(result && result.sessionId !== conversation.sessionId)
+      setConversation(result)
     };
-    
-
-    postData();
-  }, [conversations]);
-
-  const clearAllTimeouts = () => {
-    timeoutIdsRef.current.forEach(clearTimeout);
-    timeoutIdsRef.current = [];
-  };
+    getCurrentConversation();
+  }, [activeConversationId]);
+  
 
   const getSuggestions = async () => {
-    let response = await fetch("http://127.0.0.1:8000/suggestions/");
-    response = await response.json();
-    setSuggestions(response.suggestions);
+    try {
+      const response = await fetch("http://127.0.0.1:8000/suggestions/");
+      const data = await response.json();
+      setSuggestions(data.suggestions);
+    } catch (error) {
+      console.error("Error fetching suggestions:", error);
+    }
   };
 
   useEffect(() => {
@@ -142,13 +101,6 @@ const ContextProvider = (props) => {
   const onSent = async (prompt, file) => {
     const userPrompt = prompt || input;
 
-    if (conversation.title === "New Chat") {
-      setConversation((prev) => ({
-        ...prev,
-        title: userPrompt.slice(0, 20),
-      }));
-    }
-
     setAllowSending(false);
     setLoading(true);
     stopReplyRef.current = false;
@@ -156,7 +108,7 @@ const ContextProvider = (props) => {
     setShowResult(true);
 
     const userMessage = { type: "user", text: userPrompt };
-    const botMessage = { type: "bot", text: "" };
+    const botMessage = { type: "bot", text: "..." };
 
     setConversation((prev) => ({
       ...prev,
@@ -164,12 +116,11 @@ const ContextProvider = (props) => {
     }));
 
     setInput("");
+
     const formData = new FormData();
-    formData.append("message", userPrompt)
-    if(file){
-      formData.append("file", file)
-    }
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    formData.append("message", userPrompt);
+    if (file) formData.append("file", file);
+
     let botReply;
     try {
       const response = await fetch("http://127.0.0.1:8000/chat", {
@@ -186,56 +137,44 @@ const ContextProvider = (props) => {
     } catch (error) {
       console.error("Error:", error);
     }
-    // setFile(null);
-    const formattedResponse = marked(botReply.response);
-    setIsTypingCompleted(false);
-    const words = formattedResponse.split(" ");
-    let currentText = "";
 
-    words.forEach((word, index) => {
-      const id = setTimeout(() => {
-        if (stopReplyRef.current) {
-          clearAllTimeouts();
-          setConversation((prev) => ({
-            ...prev,
-            messages: [...prev.messages.slice(0, -1)],
-          }));
-          setLoading(false);
-          setAllowSending(true);
-          setStopIcon(false);
-          return;
-        }
-    
-        currentText += word + " ";
-        setConversation((prev) => {
-          const updatedMessages = [...prev.messages];
-          if (updatedMessages.length > 0) {
-            updatedMessages[updatedMessages.length - 1] = {
-              ...updatedMessages[updatedMessages.length - 1],
-              text: currentText,
-            };
-            return { ...prev, messages: updatedMessages };
-          }
-          return prev; 
-        });
-    
-        if (index === words.length - 1) {
-          setLoading(false);
-          setStopIcon(false);
-          setAllowSending(true);
-          setIsTypingCompleted(true);
-        }
-        setLoading(false);
+    const formattedResponse = marked(
+      botReply?.response || "Something went wrong"
+    );
+    await sleep(1000);
 
-      }, index * 40);
-      timeoutIdsRef.current.push(id);
-    });
-    
+
+    const userMessage1 = { type: "user", text: userPrompt };
+    const botMessage1 = { type: "bot", text: formattedResponse };
+
+    const updateConversation = async () => {
+      const response = await fetch(`http://127.0.0.1:8000/conversation/${activeConversationId}`, {
+        method:"POST",
+        headers:{
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({"userMsg": userMessage1, "botMsg": botMessage1, "prompt": prompt})
+      })
+      setUpdateSidebar(!updateSidebar)
+      const result = await response.json()
+      setConversation(result)
+      if (conversation.title === "New Chat") {
+        setConversation((prev) => ({
+          ...prev,
+          title: userPrompt.slice(0, 20),
+        }));
+      }
+      
+    }
+    updateConversation()
+
+    setLoading(false);
+    setStopIcon(false);
+    setAllowSending(true);
   };
 
   const stopReply = () => {
     stopReplyRef.current = true;
-    clearAllTimeouts();
     setLoading(false);
     setAllowSending(true);
     setStopIcon(false);
@@ -245,7 +184,6 @@ const ContextProvider = (props) => {
     <Context.Provider
       value={{
         conversation,
-        conversations,
         setActiveConversationId,
         activeConversationId,
         onSent,
@@ -258,6 +196,10 @@ const ContextProvider = (props) => {
         stopIcon,
         suggestions,
         createNewChat,
+        updateSidebar,
+        setUpdateSidebar,
+        updateSidebar2,
+        setUpdateSidebar2
       }}
     >
       {props.children}

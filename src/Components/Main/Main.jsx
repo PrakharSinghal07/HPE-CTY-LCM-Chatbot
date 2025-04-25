@@ -60,7 +60,7 @@ const Main = () => {
         </div>{" "}
       </div>
       <div className="main_container">
-        {conversation.messages === undefined ||
+        {!conversation.messages ||
         conversation.messages.length === 0 ? (
           <>
             <div className="greet">
@@ -106,7 +106,6 @@ const Main = () => {
             </div>
           ))
         )}
-        {console.log("Rendering messages:", conversation.messages)}
       </div>
       <div className={`main_bottom ${file && 'main_bottom_with_file'}`}>
         <div className="search_box">
@@ -136,7 +135,6 @@ const Main = () => {
               type="file"
               onChange={(e) => {
                 setFile(e.target.files[0]);
-                // console.log(file);
               }}
               style={{ display: "none" }}
               id="fileUpload"
@@ -144,7 +142,6 @@ const Main = () => {
               <img src={assets.mic_icon} className="utility_icon" alt="" />
             <label className="file_label" htmlFor="fileUpload">
               <img className="file_icon utility_icon" src={assets.add_file} alt="" />
-              {/* {file && <img src={assets.file} alt="" />} */}
 
             </label>
             <img
@@ -163,9 +160,6 @@ const Main = () => {
           </div>
           </div>
         </div>
-        {/* <p className="bottom_info">
-          Orbit can make mistakes. Check important info.
-        </p> */}
       </div>
       <div className="transparent"></div>
       <div ref={chatEndRef}></div>

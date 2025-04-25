@@ -19,6 +19,7 @@ import light_mode from './light-mode.png'
 import menu_bar from './menu-bar.png'
 import file from './file.png'
 import cross from './close.png'
+import deleteBtn from './delete.png'
 export const assets = {
     history_icon,
     menu_icon,
@@ -40,5 +41,6 @@ export const assets = {
     light_mode,
     menu_bar,
     file,
-    cross
+    cross,
+    deleteBtn
 }

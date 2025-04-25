@@ -1,16 +1,32 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Sidebar.css";
 import { assets } from "../../assets/assets";
 import { Context } from "../../Context/Context";
 
 const Sidebar = () => {
-  const { conversations, setActiveConversationId, activeConversationId, createNewChat} =
+  const {updateSidebar2, setUpdateSidebar2 ,updateSidebar , setUpdateSidebar ,setActiveConversationId, activeConversationId, createNewChat} =
     useContext(Context);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [conversations, setConversations] = useState([])
+  useEffect(() => {
+    const fetchTitle = async () => {
+      const response = await fetch("http://127.0.0.1:8000/conversation/sidebar")
+      const result = await response.json()
+      setConversations(result)
+    }
+    fetchTitle()
+  }, [activeConversationId, updateSidebar])
 
+  const handleChatMenuClicked = async () => {
+    const response = await fetch(`http://127.0.0.1:8000/conversation/${activeConversationId}`, {
+      method: "DELETE"
+    })
+    setUpdateSidebar2(!updateSidebar2)
+  }
   const handleMenuIconClicked = () => {
     setSidebarExpanded((prev) => !prev);
   };
+
 
   return (
     <div className={`sidebar ${sidebarExpanded ? "expanded" : "collapsed"}`}>
@@ -31,13 +47,6 @@ const Sidebar = () => {
         {sidebarExpanded && (
           <div className="recent">
             <p className="recent_title">Recent</p>
-            {/* <div
-              className="recent_entry"
-              onClick={() => console.log("Recent Chat Clicked")}
-            >
-              <img src={assets.message_icon} alt="Message" />
-              <p>{conversation.title.slice(0, 18)}...</p>
-            </div> */}
             {conversations.map((conv) => (
               <div
                 key={conv.sessionId}
@@ -46,8 +55,7 @@ const Sidebar = () => {
                 }`}
                 onClick={() => setActiveConversationId(conv.sessionId)}
               >
-                {/* <img src={assets.message_icon} alt="Message" /> */}
-                <p>{conv.title?.slice(0, 18) || "Untitled Chat"}...</p>
+                <p className="chatName"><span>{conv.title?.slice(0, 18) || "New Chat"}...</span> {activeConversationId === conv.sessionId && <span className="menu" onClick={handleChatMenuClicked}><img src={assets.deleteBtn}></img></span>}</p>
               </div>
             ))}
           </div>
